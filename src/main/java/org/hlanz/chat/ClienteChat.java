@@ -4,13 +4,18 @@ import java.net.*;
 import java.util.Scanner;
 
 public class ClienteChat {
-    private static final String HOST = "localhost";
-    private static final int PUERTO = 8080;
+    private static final String HOST = "localhost"; //Poner aqui vuestra ip (en windows ipconfig /all)
+    private static final int PUERTO = 8080; //Vamos a dejar este puerto al no ser que haya problemas
 
+    //conexion
     private Socket socket;
+    //envia datos
     private PrintWriter salida;
+    //recibe datos
     private BufferedReader entrada;
+    //para consola
     private Scanner scanner;
+    //controlar si seguimos que en el chat
     private volatile boolean conectado = true;
 
     public ClienteChat() {
@@ -25,11 +30,11 @@ public class ClienteChat {
 
             System.out.println("Conectado al servidor de chat");
 
-            // Thread para escuchar mensajes del servidor
-            Thread escuchador = new Thread(new EscuchadorServidor());
-            escuchador.start();
+            //unidad minima de procesamiento para escuchar mensajes del servidor
+            Thread listener = new Thread(new ListenerServidor());
+            listener.start();
 
-            // Thread principal para enviar mensajes
+            //hilo principal para enviar mensajes
             while (conectado) {
                 String mensaje = scanner.nextLine();
                 if (mensaje != null && !mensaje.trim().isEmpty()) {
@@ -44,9 +49,10 @@ public class ClienteChat {
         } catch (IOException e) {
             System.err.println("Error de conexión: " + e.getMessage());
         } finally {
+            //para que no se quede nada abierto
             cerrarConexion();
         }
-    }
+    }//fin metodo principal
 
     private void cerrarConexion() {
         try {
@@ -59,10 +65,10 @@ public class ClienteChat {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }//fin cerrar conexion
 
-    // Clase interna para escuchar mensajes del servidor
-    private class EscuchadorServidor implements Runnable {
+    // Clase privada para lanzar hilos que escuchen mensajes del servidor
+    private class ListenerServidor implements Runnable {
         @Override
         public void run() {
             try {
@@ -76,11 +82,11 @@ public class ClienteChat {
                 }
             }
         }
-    }
+    }//fin clase recibir
 
     public static void main(String[] args) {
         System.out.println("=== CLIENTE DE CHAT ===");
         ClienteChat cliente = new ClienteChat();
         cliente.iniciar();
-    }
-}
+    }//fin main
+}//fin clase

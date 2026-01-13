@@ -22,6 +22,7 @@ public class ServidorChat {
         try (ServerSocket serverSocket = new ServerSocket(PUERTO)) {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
+                System.out.println("Nuevo cliente conectado: " + clientSocket.getInetAddress());
                 ManejadorClienteChat manejador = new ManejadorClienteChat(clientSocket);
                 clientes.add(manejador);
                 pool.execute(manejador);

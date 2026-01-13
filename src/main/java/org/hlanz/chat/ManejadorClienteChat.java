@@ -29,7 +29,7 @@ public class ManejadorClienteChat implements Runnable{
                 nombreUsuario = "Anónimo_" + socket.getPort();
             }
 
-            System.out.println(nombreUsuario + " se ha conectado");
+            System.out.println(nombreUsuario + " se ha conectado desde "+socket.getInetAddress());
 
             // Notificar a todos
             salida.println("¡Bienvenido " + nombreUsuario + "!");
